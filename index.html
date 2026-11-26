@@ -1,0 +1,1799 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1B5C4B">
+  <meta name="description" content="나에게 맞는 집은 어떤 집일까? 48문항으로 살펴보는 주거 라이프스타일 테스트">
+  <title>나에게 맞는 집은 어떤 집일까? | 주거 라이프스타일 테스트</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <!-- Pretendard를 못 받는 환경에서만 쓰이는 대체 폰트 -->
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+  <style>
+  /* ============================================================
+     디자인 토큰 — 건축 제도용지 컨셉
+     직각 모서리, 얇은 선, 단일 강조색(딥그린)
+     ============================================================ */
+  :root{
+    --paper:#F4F2ED;
+    --card:#FFFFFF;
+    --ink:#16161A;
+    --ink-2:#46443F;
+    --ink-3:#8B867C;
+    --line:#E3DED4;
+    --line-2:#CFC8BA;
+    --accent:#1B5C4B;
+    --accent-dark:#113D32;
+    --accent-soft:#EBF2EF;
+    --accent-line:#AFCCC2;
+    --signal:#B4522B;
+    --r:3px;
+    --ease:cubic-bezier(.2,.7,.3,1);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    font-family:"Pretendard Variable",Pretendard,"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;
+    /* Pretendard 우선, 실패 시 Noto Sans KR → 시스템 한글 폰트 순 */
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.68;
+    font-size:16px;
+    letter-spacing:-.011em;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* 종이 위의 아주 옅은 모눈 — 도면 느낌의 바탕 */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:64px 64px;
+    opacity:.5;
+    mask-image:radial-gradient(ellipse 85% 55% at 50% 0%,#000 10%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 85% 55% at 50% 0%,#000 10%,transparent 75%);
+  }
+  a{color:inherit}
+  button,input,select{font:inherit;color:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  h1,h2,h3,p{margin:0 0 14px}
+  h1{font-size:clamp(33px,6.6vw,54px);line-height:1.17;letter-spacing:-.045em;font-weight:800}
+  h2{font-size:clamp(22px,4vw,27px);line-height:1.3;letter-spacing:-.035em;font-weight:800}
+  h3{font-size:17px;letter-spacing:-.025em;font-weight:750;margin-bottom:10px}
+  strong,b{font-weight:750}
+
+  /* ── 공통 유틸 ── */
+  .eyebrow{
+    font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--accent);
+    display:flex;align-items:center;gap:9px;margin-bottom:14px;text-transform:uppercase;
+  }
+  .eyebrow::after{content:"";flex:1;height:1px;background:var(--accent-line)}
+  .lead{font-size:17.5px;color:var(--ink-2);line-height:1.7}
+  .small{font-size:14px;color:var(--ink-3);line-height:1.65}
+  .micro{font-size:12.5px;color:var(--ink-3);line-height:1.6}
+  .num{font-variant-numeric:tabular-nums}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  /* ── 진행 바 (상단 고정) ── */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;height:3px;z-index:60;
+    background:transparent;
+  }
+  .topbar>i{
+    display:block;height:100%;width:0;background:var(--accent);
+    transition:width .45s var(--ease);
+  }
+
+  /* ── 헤더 ── */
+  .site-head{
+    position:relative;z-index:1;
+    border-bottom:1px solid var(--line);
+    background:rgba(244,242,237,.82);
+    backdrop-filter:saturate(1.6) blur(8px);
+    -webkit-backdrop-filter:saturate(1.6) blur(8px);
+    position:sticky;top:0;z-index:50;
+  }
+  .site-head .inner{
+    max-width:860px;margin:0 auto;padding:13px 22px;
+    display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  }
+  .logo{font-size:13px;font-weight:800;letter-spacing:-.02em}
+  .logo em{font-style:normal;color:var(--accent)}
+  .head-note{font-size:11.5px;color:var(--ink-3);letter-spacing:.01em}
+
+  main{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:44px 22px 90px}
+
+  /* ── 카드(직각 + 얇은 선) ── */
+  .sheet{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    padding:clamp(24px,4.6vw,38px);
+  }
+  .sheet + .sheet{margin-top:18px}
+
+  /* ── 히어로 ── */
+  .hero{
+    position:relative;background:var(--card);
+    border:1px solid var(--line);border-top:3px solid var(--accent);
+    border-radius:var(--r);
+    padding:clamp(30px,6vw,52px);
+    overflow:hidden;
+  }
+  /* 도면의 지붕선 — 장식이 아니라 주제를 가리키는 표식 */
+  .hero svg.roof{
+    position:absolute;right:-30px;top:26px;width:270px;height:200px;
+    stroke:var(--accent-line);fill:none;stroke-width:1.1;opacity:.75;pointer-events:none;
+  }
+  .hero h1{max-width:12ch}
+  .hero .lead{max-width:50ch}
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:0 26px;margin-top:26px;padding-top:20px;
+    border-top:1px solid var(--line);font-size:13px;color:var(--ink-3);
+  }
+  .hero-meta span{display:flex;align-items:baseline;gap:6px}
+  .hero-meta b{font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:800}
+
+  /* ── 파트 목록(카드 대신 치수선 리스트) ── */
+  .parts{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+  .parts li{
+    display:grid;grid-template-columns:64px 1fr;gap:18px;
+    padding:17px 0;border-bottom:1px solid var(--line);align-items:start;
+  }
+  .parts .no{
+    font-size:11.5px;font-weight:800;letter-spacing:.08em;color:var(--accent);
+    padding-top:3px;font-variant-numeric:tabular-nums;
+  }
+  .parts h3{margin:0 0 3px}
+  .parts p{margin:0;font-size:14px;color:var(--ink-3);line-height:1.6}
+
+  /* ── 폼 요소 ── */
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+  .field label{display:block;font-size:13px;font-weight:750;margin-bottom:7px;color:var(--ink-2)}
+  .field select{
+    width:100%;padding:13px 12px;min-height:50px;
+    border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);
+    font-size:15px;transition:border-color .18s;
+  }
+  .field select:hover{border-color:var(--ink-3)}
+
+  .consent{
+    display:flex;gap:11px;align-items:flex-start;
+    margin-top:18px;padding:15px;
+    background:var(--accent-soft);border-left:2px solid var(--accent);
+    font-size:13.5px;line-height:1.62;
+  }
+  .consent input{margin:4px 0 0;width:17px;height:17px;accent-color:var(--accent);flex:0 0 auto}
+
+  /* ── 버튼 ── */
+  .btn{
+    border:1px solid var(--accent);background:var(--accent);color:#fff;
+    border-radius:var(--r);padding:14px 26px;min-height:50px;
+    font-weight:750;font-size:15px;letter-spacing:-.01em;
+    transition:background .18s,border-color .18s,transform .12s var(--ease),opacity .18s;
+  }
+  .btn:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+  .btn:active{transform:translateY(1px)}
+  .btn[disabled]{background:#CFCBC3;border-color:#CFCBC3;color:#fff;cursor:not-allowed}
+  .btn-ghost{background:transparent;color:var(--ink-2);border-color:var(--line-2)}
+  .btn-ghost:hover{background:#F0EDE6;color:var(--ink);border-color:var(--ink-3)}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+  .btn-row .btn{flex:1;min-width:140px}
+
+  .note{
+    margin-top:20px;padding:14px 16px;
+    background:#F7F5F0;border:1px solid var(--line);border-radius:var(--r);
+    font-size:13px;color:var(--ink-2);line-height:1.65;
+  }
+  .note strong{color:var(--ink)}
+
+  /* ============================================================
+     문항 화면
+     ============================================================ */
+  .part-head{margin-bottom:26px}
+  .part-head .row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .part-head h1{font-size:clamp(26px,4.6vw,36px);margin-bottom:8px}
+
+  .gauge{margin-top:22px}
+  .gauge-row{
+    display:flex;align-items:baseline;justify-content:space-between;
+    font-size:12.5px;color:var(--ink-3);margin-bottom:8px;
+  }
+  .gauge-row b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:800;font-size:13px}
+  .ticks{display:flex;gap:4px}
+  .ticks i{
+    flex:1;height:4px;background:var(--line);border-radius:1px;
+    transition:background .35s var(--ease);
+  }
+  .ticks i.active{background:var(--accent-line)}
+  .ticks i.done{background:var(--accent)}
+
+  /* ── 질문 ── */
+  .q{
+    padding:26px 0;border-bottom:1px solid var(--line);
+  }
+  .q:last-of-type{border-bottom:0;padding-bottom:6px}
+  .q-text{
+    display:grid;grid-template-columns:40px 1fr;gap:12px;
+    margin-bottom:17px;font-size:16.5px;font-weight:650;line-height:1.6;letter-spacing:-.02em;
+  }
+  .q-no{
+    font-size:11.5px;font-weight:800;color:var(--ink-3);
+    font-variant-numeric:tabular-nums;padding-top:5px;letter-spacing:.04em;
+    transition:color .25s;
+  }
+  .q.answered .q-no{color:var(--accent)}
+
+  /* 5점 척도 — 점과 트랙 */
+  .scale{position:relative;padding:0 2px}
+  .scale-track{
+    position:absolute;left:10%;right:10%;top:15px;height:1px;background:var(--line-2);
+  }
+  .scale-opts{position:relative;display:grid;grid-template-columns:repeat(5,1fr)}
+  .opt{
+    display:flex;flex-direction:column;align-items:center;gap:9px;
+    padding:2px 0 4px;cursor:pointer;
+  }
+  .opt input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+  .dot{
+    width:27px;height:27px;border-radius:50%;
+    border:1.5px solid var(--line-2);background:var(--card);
+    display:grid;place-items:center;
+    transition:border-color .18s,background .18s,transform .18s var(--ease);
+  }
+  .dot::after{
+    content:"";width:11px;height:11px;border-radius:50%;background:var(--accent);
+    transform:scale(0);transition:transform .22s var(--ease);
+  }
+  .opt-label{
+    font-size:12px;color:var(--ink-3);text-align:center;line-height:1.3;
+    letter-spacing:-.03em;transition:color .18s,font-weight .18s;
+  }
+  .opt:hover .dot{border-color:var(--accent);transform:scale(1.07)}
+  .opt input:checked + .dot{border-color:var(--accent);border-width:2px}
+  .opt input:checked + .dot::after{transform:scale(1)}
+  .opt input:checked ~ .opt-label{color:var(--accent);font-weight:800}
+  .opt input:focus-visible + .dot{outline:2px solid var(--accent);outline-offset:3px}
+
+  /* ============================================================
+     결과 화면
+     ============================================================ */
+  .bars{display:grid;grid-template-columns:1fr 1fr;gap:0 34px}
+  .bar-item{padding:13px 0;border-bottom:1px solid var(--line)}
+  .bar-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
+  .bar-head strong{font-size:14px;font-weight:700;letter-spacing:-.02em}
+  .bar-head span{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;font-weight:750}
+  .bar{height:6px;background:#EEEAE2;border-radius:1px;overflow:hidden}
+  .bar>i{
+    display:block;height:100%;width:0;background:var(--accent);border-radius:1px;
+    transition:width .9s var(--ease);
+  }
+
+  .result{
+    border:1px solid var(--line);border-radius:var(--r);
+    padding:22px;margin-top:14px;background:var(--card);
+  }
+  .result.top{border:1px solid var(--accent);border-top:3px solid var(--accent);padding-top:21px}
+  .result .rank{
+    font-size:11.5px;font-weight:800;letter-spacing:.1em;color:var(--accent);
+    margin-bottom:9px;display:block;
+  }
+  .result h3{font-size:20px;margin-bottom:7px;letter-spacing:-.03em}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:13px 0 0}
+  .tag{
+    font-size:11.5px;color:var(--accent);background:var(--accent-soft);
+    border:1px solid var(--accent-line);border-radius:100px;padding:3px 10px;font-weight:650;
+  }
+  .check{
+    margin-top:14px;padding:13px 15px;background:#F7F5F0;
+    border-left:2px solid var(--line-2);font-size:13.5px;line-height:1.62;
+  }
+  .check strong{display:block;margin-bottom:3px;font-size:12px;letter-spacing:.02em;color:var(--ink-3)}
+
+  .balance{
+    padding:15px 17px;margin-top:12px;
+    background:var(--accent-soft);border-left:2px solid var(--accent);
+    font-size:14px;line-height:1.68;
+  }
+
+  hr.rule{border:0;border-top:1px solid var(--line);margin:26px 0}
+
+  /* ── 도서 소개 ── */
+  .book{
+    display:grid;grid-template-columns:132px 1fr;gap:26px;align-items:start;
+  }
+  .book-cover{
+    position:relative;width:132px;aspect-ratio:3/4.3;
+    background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:2px;
+    overflow:hidden;display:grid;place-items:center;
+    box-shadow:0 10px 26px rgba(27,92,75,.14);
+  }
+  .book-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .book-cover .ph{
+    padding:14px;text-align:center;font-size:11.5px;color:var(--accent);
+    line-height:1.55;font-weight:700;letter-spacing:-.02em;
+  }
+  .book h3{font-size:21px;margin-bottom:6px;letter-spacing:-.035em}
+  .book .byline{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+  .stores{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .store{
+    flex:1;min-width:92px;text-align:center;text-decoration:none;
+    border:1px solid var(--line-2);border-radius:var(--r);
+    padding:11px 8px;font-size:13px;font-weight:700;color:var(--ink-2);
+    transition:border-color .18s,background .18s,color .18s;
+  }
+  .store:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+
+  /* ── 통계 ── */
+  .tabs{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0}
+  .tab{
+    border:1px solid var(--line-2);background:var(--card);border-radius:100px;
+    padding:9px 15px;font-size:13px;font-weight:700;color:var(--ink-2);
+    transition:all .18s;
+  }
+  .tab:hover{border-color:var(--accent);color:var(--accent)}
+  .tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .dist{
+    display:grid;grid-template-columns:minmax(118px,1.25fr) minmax(80px,2.2fr) 74px;
+    align-items:center;gap:11px;padding:7px 0;
+  }
+  .dist-name{font-size:12.5px;line-height:1.35;letter-spacing:-.025em}
+  .dist-track{height:9px;background:#EEEAE2;border-radius:1px;overflow:hidden}
+  .dist-track>i{display:block;height:100%;width:0;background:var(--accent-line);transition:width .7s var(--ease)}
+  .dist.me .dist-track>i{background:var(--accent)}
+  .dist.me .dist-name{font-weight:800;color:var(--accent)}
+  .dist-val{font-size:12px;text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .cohorts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+  .cohort{border:1px solid var(--line);border-radius:var(--r);padding:15px}
+  .cohort h3{font-size:14px;margin-bottom:10px}
+  .cohort-item{padding:9px 0;border-top:1px solid var(--line)}
+  .cohort-item:first-of-type{border-top:0}
+  .cohort-item strong{display:block;font-size:13px;font-weight:700}
+  .cohort-item span{font-size:12px;color:var(--ink-3)}
+  .mini{
+    background:var(--accent-soft);border:1px solid var(--accent-line);
+    border-radius:var(--r);padding:13px 15px;font-size:13.5px;line-height:1.6;margin:12px 0;
+  }
+  .demo-flag{
+    display:inline-block;border:1px solid var(--signal);color:var(--signal);
+    border-radius:2px;font-size:11px;font-weight:800;padding:3px 7px;letter-spacing:.02em;
+  }
+
+  .foot{font-size:12px;color:var(--ink-3);line-height:1.68;margin-top:36px}
+
+  /* ── 다이얼로그 / 토스트 (네이티브 팝업 대체) ── */
+  .modal{
+    position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:22px;
+    background:rgba(22,22,26,.42);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+    opacity:0;pointer-events:none;transition:opacity .22s var(--ease);
+  }
+  .modal.on{opacity:1;pointer-events:auto}
+  .modal-box{
+    background:var(--card);border:1px solid var(--line);border-top:3px solid var(--accent);
+    border-radius:var(--r);padding:26px;width:100%;max-width:420px;
+    transform:translateY(10px) scale(.99);transition:transform .26s var(--ease);
+  }
+  .modal.on .modal-box{transform:none}
+  .modal-box h3{margin-bottom:8px;font-size:18px}
+  .modal-box p{font-size:14px;color:var(--ink-2);margin-bottom:0;line-height:1.65}
+  .modal-box textarea{
+    width:100%;margin-top:14px;min-height:148px;padding:12px;
+    border:1px solid var(--line-2);border-radius:var(--r);
+    font-size:13px;line-height:1.6;resize:vertical;background:var(--paper);
+    font-family:inherit;
+  }
+  .modal-actions{display:flex;gap:9px;margin-top:20px;justify-content:flex-end}
+  .modal-actions .btn{min-height:44px;padding:11px 20px;font-size:14px;flex:0 0 auto}
+
+  .toast{
+    position:fixed;left:50%;bottom:30px;z-index:210;
+    transform:translate(-50%,16px);opacity:0;pointer-events:none;
+    background:var(--ink);color:#fff;border-radius:var(--r);
+    padding:13px 22px;font-size:14px;font-weight:650;letter-spacing:-.01em;
+    box-shadow:0 10px 30px rgba(22,22,26,.3);
+    transition:opacity .26s var(--ease),transform .26s var(--ease);
+    max-width:calc(100vw - 40px);text-align:center;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  /* ============================================================
+     모션
+     ============================================================ */
+  .reveal{opacity:0;transform:translateY(15px)}
+  .reveal.in{
+    opacity:1;transform:none;
+    transition:opacity .62s var(--ease),transform .62s var(--ease);
+  }
+  @keyframes screenIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+  .screen-in{animation:screenIn .42s var(--ease) both}
+
+  /* ============================================================
+     반응형
+     ============================================================ */
+  @media(max-width:640px){
+    body{font-size:15.5px}
+    main{padding:30px 15px 70px}
+    .site-head .inner{padding:11px 15px}
+    .head-note{display:none}
+    .sheet,.hero{padding:22px 17px}
+    .hero svg.roof{width:180px;right:-42px;top:18px;opacity:.5}
+    .field-grid,.bars,.cohorts{grid-template-columns:1fr}
+    .bars{gap:0}
+    .parts li{grid-template-columns:52px 1fr;gap:12px}
+    .hero-meta{gap:0 18px}
+    .q-text{grid-template-columns:30px 1fr;gap:8px;font-size:15.5px}
+    .scale-track{left:8%;right:8%;top:14px}
+    .dot{width:25px;height:25px}
+    .opt-label{font-size:11px;letter-spacing:-.05em}
+    .book{grid-template-columns:104px 1fr;gap:16px}
+    .book-cover{width:104px}
+    .dist{grid-template-columns:minmax(96px,1.2fr) minmax(54px,1.3fr) 64px;gap:7px}
+    .dist-name{font-size:11.5px}
+    .btn-row .btn{min-width:120px}
+    .pc-br{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+    .reveal{opacity:1;transform:none}
+  }
+  </style>
+</head>
+<body>
+  <div class="topbar" aria-hidden="true"><i id="topbar-fill"></i></div>
+
+  <header class="site-head">
+    <div class="inner">
+      <span class="logo">오십, 살 집을 생각하다 <em>·</em> 주거 라이프스타일 테스트</span>
+      <span class="head-note">독자 참여형 콘텐츠</span>
+    </div>
+  </header>
+
+  <main id="app" aria-live="polite"></main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal-box">
+      <h3 id="modal-title"></h3>
+      <p id="modal-desc"></p>
+      <div id="modal-extra"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>const DATA = {
+  "parts": [
+    {
+      "number": "PART 01",
+      "title": "나의 이상적인 동네",
+      "description": "매일 다니는 길과 자연스럽게 만나는 사람들 사이에서 중요한 조건을 찾아봅니다."
+    },
+    {
+      "number": "PART 02",
+      "title": "집에서 보내고 싶은 하루",
+      "description": "가족과 함께하는 시간, 나만의 공간, 새롭게 시작할 활동의 자리를 생각해 봅니다."
+    },
+    {
+      "number": "PART 03",
+      "title": "선호하는 주거환경",
+      "description": "집 주변의 풍경과 소음, 주택을 유지·관리하는 방식 중 무엇을 중시하는지 살펴봅니다."
+    },
+    {
+      "number": "PART 04",
+      "title": "앞으로의 주거 가치관",
+      "description": "주거에 쓰는 비용과 장소를 바꾸는 경험에 대한 선호를 확인합니다."
+    }
+  ],
+  "questions": [
+    {
+      "id": "P1-01",
+      "part": 0,
+      "text": "차를 이용하지 않고도 장보기와 기본적인 진료를 해결할 수 있는 동네에서 살고 싶다.",
+      "axis": "L",
+      "reverse": false
+    },
+    {
+      "id": "P1-02",
+      "part": 0,
+      "text": "일주일에 한 번 이상 자연스럽게 마주치는 이웃이나 친구가 있는 동네에서 살고 싶다.",
+      "axis": "R",
+      "reverse": false
+    },
+    {
+      "id": "P1-03",
+      "part": 0,
+      "text": "필요한 시설이 차로 20분쯤 떨어져 있어도 집 자체가 만족스럽다면 충분하다.",
+      "axis": "L",
+      "reverse": true
+    },
+    {
+      "id": "P1-04",
+      "part": 0,
+      "text": "이웃과 별다른 인사를 나누지 않아도 편안하게 지낼 수 있는 동네가 더 좋다.",
+      "axis": "R",
+      "reverse": true
+    },
+    {
+      "id": "P1-05",
+      "part": 0,
+      "text": "운전을 하지 못하는 날에도 평소의 생활을 크게 바꾸지 않아도 되는 동네가 좋다.",
+      "axis": "L",
+      "reverse": false
+    },
+    {
+      "id": "P1-06",
+      "part": 0,
+      "text": "돈을 쓰지 않고 머물면서 사람들과 자연스럽게 어울릴 수 있는 공간이 가까웠으면 좋겠다.",
+      "axis": "R",
+      "reverse": false
+    },
+    {
+      "id": "P1-07",
+      "part": 0,
+      "text": "평일에 동네 시설을 자주 이용하기보다 주말에 차로 필요한 일을 한꺼번에 처리하는 생활도 괜찮다.",
+      "axis": "L",
+      "reverse": true
+    },
+    {
+      "id": "P1-08",
+      "part": 0,
+      "text": "동네에 단골가게나 얼굴 아는 사람이 별로 없어도 생활의 만족도에는 큰 영향이 없을 것 같다.",
+      "axis": "R",
+      "reverse": true
+    },
+    {
+      "id": "P1-09",
+      "part": 0,
+      "text": "집에서 버스나 지하철까지 이동하는 시간과 길의 편안함은 집을 고를 때 중요한 기준이다.",
+      "axis": "L",
+      "reverse": false
+    },
+    {
+      "id": "P1-10",
+      "part": 0,
+      "text": "지역 강좌나 주민 모임처럼 관심사를 나눌 기회가 있는 동네를 선호한다.",
+      "axis": "R",
+      "reverse": false
+    },
+    {
+      "id": "P1-11",
+      "part": 0,
+      "text": "집 주변이 한적하다면 자주 가는 목적지까지 이동 시간이 조금 길어져도 좋다.",
+      "axis": "L",
+      "reverse": true
+    },
+    {
+      "id": "P1-12",
+      "part": 0,
+      "text": "이웃과 반복해서 마주치는 일이 많은 주거환경은 다소 부담스럽다.",
+      "axis": "R",
+      "reverse": true
+    },
+    {
+      "id": "P2-01",
+      "part": 1,
+      "text": "함께 사는 사람이 있더라도 방해받지 않고 쉴 수 있는 나만의 공간은 꼭 필요하다.",
+      "axis": "P",
+      "reverse": false
+    },
+    {
+      "id": "P2-02",
+      "part": 1,
+      "text": "집에 공부·취미·작업을 위한 자리를 늘 펼쳐둔 채로 사용할 수 있었으면 좋겠다.",
+      "axis": "H",
+      "reverse": false
+    },
+    {
+      "id": "P2-03",
+      "part": 1,
+      "text": "거실과 식탁을 가족과 함께 사용하는 것만으로도 충분해서 별도의 개인 공간이 꼭 필요하지는 않다.",
+      "axis": "P",
+      "reverse": true
+    },
+    {
+      "id": "P2-04",
+      "part": 1,
+      "text": "집에서는 새로운 활동을 하기보다 푹 쉬고 잠을 잘 자는 것이 가장 중요하다.",
+      "axis": "H",
+      "reverse": true
+    },
+    {
+      "id": "P2-05",
+      "part": 1,
+      "text": "생활 시간이 달라도 서로의 소음이나 동선이 부딪히지 않는 집 구조를 선호한다.",
+      "axis": "P",
+      "reverse": false
+    },
+    {
+      "id": "P2-06",
+      "part": 1,
+      "text": "새로운 일을 시작할 때 가구나 방의 용도를 쉽게 바꿀 수 있는 집이 좋다.",
+      "axis": "H",
+      "reverse": false
+    },
+    {
+      "id": "P2-07",
+      "part": 1,
+      "text": "집이 조금 좁더라도 가족이 같은 공간에서 많은 시간을 보내는 편이 좋다.",
+      "axis": "P",
+      "reverse": true
+    },
+    {
+      "id": "P2-08",
+      "part": 1,
+      "text": "취미나 공부는 외부 시설을 이용하면 되므로 집에 별도 공간을 둘 필요는 적다.",
+      "axis": "H",
+      "reverse": true
+    },
+    {
+      "id": "P2-09",
+      "part": 1,
+      "text": "손님이 오더라도 사생활이 드러나지 않는 공간 구성이 중요하다.",
+      "axis": "P",
+      "reverse": false
+    },
+    {
+      "id": "P2-10",
+      "part": 1,
+      "text": "지금은 쓰지 않는 방이라도 나중에 다른 목적으로 활용할 수 있는 유연한 평면을 선호한다.",
+      "axis": "H",
+      "reverse": false
+    },
+    {
+      "id": "P2-11",
+      "part": 1,
+      "text": "각자의 방으로 흩어지기보다 거실 같은 공용 공간에서 생활하는 것이 더 편하다.",
+      "axis": "P",
+      "reverse": true
+    },
+    {
+      "id": "P2-12",
+      "part": 1,
+      "text": "집은 여러 활동을 하는 곳이라기보다 바깥 활동을 마치고 돌아와 회복하는 곳이면 충분하다.",
+      "axis": "H",
+      "reverse": true
+    },
+    {
+      "id": "P3-01",
+      "part": 2,
+      "text": "집 주변에 공원이나 숲이 가까이 있으면 생활의 만족도가 크게 높아질 것 같다.",
+      "axis": "N",
+      "reverse": false
+    },
+    {
+      "id": "P3-02",
+      "part": 2,
+      "text": "건물 관리와 큰 수선을 내가 직접 책임지지 않는 주거 형태를 선호한다.",
+      "axis": "M",
+      "reverse": false
+    },
+    {
+      "id": "P3-03",
+      "part": 2,
+      "text": "녹지나 풍경이 좋은 것보다 가게와 대중교통이 가까운 편이 더 중요하다.",
+      "axis": "N",
+      "reverse": true
+    },
+    {
+      "id": "P3-04",
+      "part": 2,
+      "text": "작은 수리나 집을 직접 가꾸는 일이 생활의 즐거움이 될 수 있다.",
+      "axis": "M",
+      "reverse": true
+    },
+    {
+      "id": "P3-05",
+      "part": 2,
+      "text": "창밖으로 나무나 열린 하늘을 볼 수 있는 집에서 살고 싶다.",
+      "axis": "N",
+      "reverse": false
+    },
+    {
+      "id": "P3-06",
+      "part": 2,
+      "text": "관리비가 들더라도 시설 관리와 청소를 체계적으로 맡아주는 곳이 편하다.",
+      "axis": "M",
+      "reverse": false
+    },
+    {
+      "id": "P3-07",
+      "part": 2,
+      "text": "자연은 가까이 두기보다 가끔 여행으로 즐기는 것만으로도 충분하다.",
+      "axis": "N",
+      "reverse": true
+    },
+    {
+      "id": "P3-08",
+      "part": 2,
+      "text": "직접 손봐야 할 곳이 있더라도 내 취향대로 집을 바꿀 수 있다면 괜찮다.",
+      "axis": "M",
+      "reverse": true
+    },
+    {
+      "id": "P3-09",
+      "part": 2,
+      "text": "평범한 날에도 조용한 산책길이나 야외 공간을 자주 이용하고 싶다.",
+      "axis": "N",
+      "reverse": false
+    },
+    {
+      "id": "P3-10",
+      "part": 2,
+      "text": "정원이나 마당처럼 꾸준히 관리해야 하는 공간은 가능하면 적었으면 좋겠다.",
+      "axis": "M",
+      "reverse": false
+    },
+    {
+      "id": "P3-11",
+      "part": 2,
+      "text": "집 주변 경관이 특별하지 않아도 실내가 쾌적하면 만족할 수 있다.",
+      "axis": "N",
+      "reverse": true
+    },
+    {
+      "id": "P3-12",
+      "part": 2,
+      "text": "집을 관리하는 데 정기적으로 시간과 노력을 쓰는 일도 감수할 수 있다.",
+      "axis": "M",
+      "reverse": true
+    },
+    {
+      "id": "P4-01",
+      "part": 3,
+      "text": "조금 더 넓은 집을 얻는 것보다 매달 주거비를 예측하기 쉬운 편이 좋다.",
+      "axis": "C",
+      "reverse": false
+    },
+    {
+      "id": "P4-02",
+      "part": 3,
+      "text": "가능하다면 지금의 생활 기반을 유지하면서 다른 지역에서도 일정 기간 살아보고 싶다.",
+      "axis": "F",
+      "reverse": false
+    },
+    {
+      "id": "P4-03",
+      "part": 3,
+      "text": "월 지출이 다소 늘어나더라도 마음에 드는 공간을 선택할 의향이 있다.",
+      "axis": "C",
+      "reverse": true
+    },
+    {
+      "id": "P4-04",
+      "part": 3,
+      "text": "새로운 동네에 적응하기보다 이미 익숙한 생활권에서 오래 살고 싶다.",
+      "axis": "F",
+      "reverse": true
+    },
+    {
+      "id": "P4-05",
+      "part": 3,
+      "text": "매매가뿐 아니라 관리비·교통비·수선비 같은 지속 비용까지 꼼꼼히 따지는 편이다.",
+      "axis": "C",
+      "reverse": false
+    },
+    {
+      "id": "P4-06",
+      "part": 3,
+      "text": "살 곳을 정하기 전에 관심 있는 지역에서 계절을 바꿔가며 머물러보고 싶다.",
+      "axis": "F",
+      "reverse": false
+    },
+    {
+      "id": "P4-07",
+      "part": 3,
+      "text": "비용이 더 들더라도 원하는 정원이나 넓은 취미 공간을 포기하고 싶지 않다.",
+      "axis": "C",
+      "reverse": true
+    },
+    {
+      "id": "P4-08",
+      "part": 3,
+      "text": "여러 지역을 경험하기보다 한곳에 정착해 생활을 쌓아가는 방식이 가장 좋다.",
+      "axis": "F",
+      "reverse": true
+    },
+    {
+      "id": "P4-09",
+      "part": 3,
+      "text": "집에 들어가는 비용을 줄여 취미·배움·여가에 쓸 여유를 확보하고 싶다.",
+      "axis": "C",
+      "reverse": false
+    },
+    {
+      "id": "P4-10",
+      "part": 3,
+      "text": "1년에 몇 주라도 다른 동네에서 평범한 일상을 보내는 생활에 매력을 느낀다.",
+      "axis": "F",
+      "reverse": false
+    },
+    {
+      "id": "P4-11",
+      "part": 3,
+      "text": "주거의 만족도가 충분히 높다면 고정 지출이 커져도 감수할 수 있다.",
+      "axis": "C",
+      "reverse": true
+    },
+    {
+      "id": "P4-12",
+      "part": 3,
+      "text": "두 지역을 오가며 생활하는 방식은 얻는 것보다 번거로움이 클 것 같다.",
+      "axis": "F",
+      "reverse": true
+    }
+  ],
+  "axes": {
+    "L": {
+      "name": "생활 접근성",
+      "short": "접근성",
+      "description": "도보·교통·필수 서비스에 쉽게 닿는 생활권을 얼마나 중시하는지"
+    },
+    "R": {
+      "name": "동네의 사회적 연결",
+      "short": "이웃 관계",
+      "description": "익숙한 이웃·단골·지역 활동을 통해 동네와 관계 맺고 싶은 정도"
+    },
+    "P": {
+      "name": "개인 공간의 독립성",
+      "short": "개인 공간",
+      "description": "혼자만의 시간과 사적 경계를 주거 공간에서 얼마나 중시하는지"
+    },
+    "H": {
+      "name": "집의 활동·변화 가능성",
+      "short": "활동 공간",
+      "description": "집에서 일하고 배우고 만들거나 공간 용도를 바꿀 수 있기를 바라는 정도"
+    },
+    "N": {
+      "name": "자연·정숙성 선호",
+      "short": "자연·정숙",
+      "description": "자연환경·풍경·야외 활동·조용한 생활을 중시하는 정도"
+    },
+    "M": {
+      "name": "관리의 간편함",
+      "short": "관리 편의",
+      "description": "직접 관리하기보다 공동 관리와 단순한 유지보수를 선호하는 정도"
+    },
+    "C": {
+      "name": "주거비의 예측 가능성",
+      "short": "비용 안정",
+      "description": "공간의 크기나 취향보다 지속 지출을 안정적으로 관리하려는 정도"
+    },
+    "F": {
+      "name": "새 지역·다거점 탐색",
+      "short": "지역 탐색",
+      "description": "한 곳의 정착을 넘어 다양한 지역을 경험하거나 두 거점에서 생활하려는 정도"
+    }
+  },
+  "profiles": [
+    {
+      "id": "large",
+      "name": "도심 생활 편의형 대단지 아파트",
+      "headline": "안정적인 관리와 편의시설을 중심으로 생활을 꾸리는 유형",
+      "target": {
+        "L": 86,
+        "R": 58,
+        "P": 57,
+        "H": 55,
+        "N": 40,
+        "M": 91,
+        "C": 68,
+        "F": 22
+      },
+      "adv": "시설 관리 부담을 줄이고 생활 인프라에 접근하기 편한 환경에 끌립니다.",
+      "check": "단지 출입 동선, 엘리베이터 대기, 관리비, 실제 도보권을 함께 확인하세요.",
+      "tags": [
+        "공동관리",
+        "생활 편의",
+        "안정성"
+      ]
+    },
+    {
+      "id": "walk",
+      "name": "걸어서 사는 도심 중소형 주택",
+      "headline": "차보다 발걸음으로 생활을 해결하는 유형",
+      "target": {
+        "L": 96,
+        "R": 66,
+        "P": 48,
+        "H": 52,
+        "N": 30,
+        "M": 79,
+        "C": 84,
+        "F": 45
+      },
+      "adv": "넓은 면적보다 이동과 생활에 드는 시간을 아끼는 것이 중요합니다.",
+      "check": "실제 보행로의 안전, 소음, 작은 집의 수납·활동 공간을 살펴보세요.",
+      "tags": [
+        "도보 생활",
+        "소형 주거",
+        "대중교통"
+      ]
+    },
+    {
+      "id": "greenapt",
+      "name": "녹지 인접 교외 아파트",
+      "headline": "자연과 편리한 관리를 함께 원하는 유형",
+      "target": {
+        "L": 69,
+        "R": 51,
+        "P": 61,
+        "H": 66,
+        "N": 84,
+        "M": 85,
+        "C": 65,
+        "F": 34
+      },
+      "adv": "도시의 기반은 유지하면서 공원과 녹지를 가까이 두고 싶어 합니다.",
+      "check": "차 없이 이용 가능한 병원·상점, 대중교통 빈도, 단지 밖 이동 거리를 확인하세요.",
+      "tags": [
+        "교외",
+        "공원",
+        "공동관리"
+      ]
+    },
+    {
+      "id": "town",
+      "name": "독립 공간을 즐기는 교외 타운하우스",
+      "headline": "내 영역과 실내외 활동을 직접 구성하려는 유형",
+      "target": {
+        "L": 44,
+        "R": 43,
+        "P": 89,
+        "H": 84,
+        "N": 82,
+        "M": 25,
+        "C": 40,
+        "F": 43
+      },
+      "adv": "공간의 자율성과 취미 활동의 여유를 동시에 중시합니다.",
+      "check": "계단·주차·교통의존도와 공용부·외벽·정원 관리 책임을 확인하세요.",
+      "tags": [
+        "저층 주거",
+        "독립 공간",
+        "취미"
+      ]
+    },
+    {
+      "id": "towncenter",
+      "name": "동네와 연결되는 지방 소도시 주택",
+      "headline": "도시의 규모는 줄여도 사람과의 연결은 이어가는 유형",
+      "target": {
+        "L": 70,
+        "R": 86,
+        "P": 61,
+        "H": 70,
+        "N": 67,
+        "M": 58,
+        "C": 77,
+        "F": 64
+      },
+      "adv": "지역의 단골과 생활 서비스가 있는 걷기 좋은 작은 도시를 선호합니다.",
+      "check": "의료 접근성과 지역 교통, 실제 주민 활동, 겨울철 생활을 검증하세요.",
+      "tags": [
+        "소도시",
+        "단골·이웃",
+        "걷는 생활"
+      ]
+    },
+    {
+      "id": "rural",
+      "name": "자연 중심 전원 단독주택",
+      "headline": "독립적인 집과 자연에서의 하루에 끌리는 유형",
+      "target": {
+        "L": 21,
+        "R": 49,
+        "P": 94,
+        "H": 89,
+        "N": 98,
+        "M": 12,
+        "C": 35,
+        "F": 49
+      },
+      "adv": "자연과 함께하는 일상, 독립적인 공간, 직접 가꾸는 즐거움을 중시합니다.",
+      "check": "자동차 이용, 진료 접근성, 계절별 난방·수리·노동 부담을 반드시 계산하세요.",
+      "tags": [
+        "전원생활",
+        "단독주택",
+        "직접 관리"
+      ]
+    },
+    {
+      "id": "cohouse",
+      "name": "관계 중심 코하우징·공동체 주거",
+      "headline": "사생활과 이웃의 연결을 함께 설계하려는 유형",
+      "target": {
+        "L": 73,
+        "R": 96,
+        "P": 59,
+        "H": 69,
+        "N": 53,
+        "M": 72,
+        "C": 71,
+        "F": 52
+      },
+      "adv": "고립은 줄이되 독립적인 생활도 가능한 공동체형 주거에 끌릴 수 있습니다.",
+      "check": "공용 공간 운영 규칙, 개인 공간, 관리 책임과 갈등 조정 구조를 확인하세요.",
+      "tags": [
+        "공용 공간",
+        "관계",
+        "독립성"
+      ]
+    },
+    {
+      "id": "dual",
+      "name": "도시와 지방을 오가는 이원 거주",
+      "headline": "익숙한 기반과 새로운 지역의 경험을 함께 갖고 싶은 유형",
+      "target": {
+        "L": 58,
+        "R": 55,
+        "P": 66,
+        "H": 72,
+        "N": 79,
+        "M": 43,
+        "C": 25,
+        "F": 96
+      },
+      "adv": "한 번의 이주보다 여러 지역에서 생활을 시험하고 이어가는 방식을 선호합니다.",
+      "check": "두 집의 주거비·관리비와 이동시간, 비워두는 기간의 관리를 함께 계산하세요.",
+      "tags": [
+        "5도 2촌",
+        "지역 탐색",
+        "두 거점"
+      ]
+    }
+  ]
+};</script>
+  <script>
+  'use strict';
+
+  /* ============================================================
+     설정
+     ============================================================ */
+  /* ── Firebase 설정 ──────────────────────────────────────────
+     Firebase 콘솔 > 프로젝트 설정 > 내 앱(웹) 에서 복사한 값을 넣으세요.
+     이 값들은 공개되어도 되는 정보입니다. (비공개 키는 절대 넣지 마세요)
+     비워두면 통계 기능만 꺼지고 테스트는 정상 작동합니다.            */
+  const FIREBASE_CONFIG = {
+    apiKey:            'AIzaSyCP129LrxeArVXGRtynEFXBhIMqqcz9OR0',
+    authDomain:        'housing-test-f947d.firebaseapp.com',
+    projectId:         'housing-test-f947d',
+    storageBucket:     'housing-test-f947d.firebasestorage.app',
+    messagingSenderId: '677456188974',
+    appId:             '1:677456188974:web:65f6b2e2aab0fe8198b1bf'
+  };
+  const MINIMUM_N = 20;   // 이 인원 미만인 그룹은 통계를 공개하지 않음
+  const STATS_DOC = ['stats','counts'];   // Firestore 문서 경로
+
+  // 도서 정보 — 표지 이미지는 assets/book_cover.jpg 로 올리면 자동 표시됩니다.
+  const BOOK = {
+    title:'오십, 살 집을 생각하다',
+    author:'',              // 예: '홍길동 지음'
+    publisher:'',           // 예: '북다'
+    cover:'assets/book_cover.jpg',
+    blurb:'지금 사는 집이 아니라, 앞으로 살고 싶은 집을 묻는 책. 생활권·관계·공간·이주라는 네 가지 축으로 오십 이후의 주거를 다시 설계합니다.',
+    stores:[
+      { name:'교보문고', url:'' },
+      { name:'예스24',  url:'' },
+      { name:'알라딘',  url:'' }
+    ]
+  };
+
+  const statsConfigured = () =>
+    Boolean(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId);
+
+  /* 왼쪽(1점) → 오른쪽(5점) 순서. 긴 라벨은 접근성용. */
+  const SCALE = [
+    { v:1, short:'전혀',   full:'전혀 그렇지 않다' },
+    { v:2, short:'아니다', full:'그렇지 않다' },
+    { v:3, short:'보통',   full:'보통이다' },
+    { v:4, short:'그렇다', full:'그렇다' },
+    { v:5, short:'매우',   full:'매우 그렇다' }
+  ];
+
+  const axesOrder = ['L','R','P','H','N','M','C','F'];
+  const total = DATA.questions.length;
+  const PER_PART = total / DATA.parts.length;
+
+  const key='home-quiz-draft-v1';
+  const demographicsKey='home-quiz-demographics-v2';
+  const submittedFlagKey='home-quiz-submitted-v2';
+  const AGE_OPTIONS=['응답하지 않음','20대 이하','30대','40대','50대','60대','70대 이상'];
+  const GENDER_OPTIONS=['응답하지 않음','여성','남성','기타'];
+
+  let demographics={age:'응답하지 않음',gender:'응답하지 않음',consent:false};
+  try{
+    const obj=JSON.parse(localStorage.getItem(demographicsKey));
+    if(obj&&typeof obj==='object'){
+      demographics.age=AGE_OPTIONS.includes(obj.age)?obj.age:'응답하지 않음';
+      demographics.gender=GENDER_OPTIONS.includes(obj.gender)?obj.gender:'응답하지 않음';
+    }
+  }catch(_e){}
+
+  let answers=Array(total).fill(null);
+  try{
+    const stored=JSON.parse(localStorage.getItem(key));
+    if(Array.isArray(stored)&&stored.length===total){
+      answers=stored.map(x=>Number.isInteger(x)&&x>=1&&x<=5?x:null);
+    }
+  }catch(_e){}
+
+  let part=0;
+  const root=document.getElementById('app');
+  const topFill=document.getElementById('topbar-fill');
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const save=()=>{try{localStorage.setItem(key,JSON.stringify(answers))}catch(_e){}};
+  const saveDemographics=()=>{try{localStorage.setItem(demographicsKey,JSON.stringify({age:demographics.age,gender:demographics.gender}))}catch(_e){}};
+  const opt=v=>v.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+  const profileName=id=>(DATA.profiles.find(p=>p.id===id)||{}).name||'알 수 없는 유형';
+  const answered=()=>answers.filter(x=>x!==null).length;
+  const completedPart=p=>answers.slice(p*PER_PART,p*PER_PART+PER_PART).every(x=>x!==null);
+  const countPart=p=>answers.slice(p*PER_PART,p*PER_PART+PER_PART).filter(x=>x!==null).length;
+  const toTop=()=>window.scrollTo({top:0,behavior:reduceMotion?'auto':'instant'});
+
+  function setTopbar(ratio){ topFill.style.width=(ratio*100).toFixed(1)+'%'; }
+
+  /* ── 다이얼로그 / 토스트 ──
+     네이티브 confirm·alert·prompt는 모양을 맞출 수 없고
+     일부 환경(인앱 브라우저, 임베드)에서 차단되므로 직접 만든다. */
+  const modal=document.getElementById('modal');
+  const toastEl=document.getElementById('toast');
+  let lastFocus=null, toastTimer=null;
+
+  function closeModal(){
+    modal.classList.remove('on');
+    setTimeout(()=>{modal.hidden=true},220);
+    document.removeEventListener('keydown',onModalKey);
+    if(lastFocus&&lastFocus.focus) lastFocus.focus();
+  }
+  function onModalKey(e){ if(e.key==='Escape') closeModal(); }
+
+  /* 확인 다이얼로그 — true/false 를 돌려준다 */
+  function ask({title,desc,ok='확인',cancel='취소'}){
+    return new Promise(resolve=>{
+      lastFocus=document.activeElement;
+      document.getElementById('modal-title').textContent=title;
+      document.getElementById('modal-desc').textContent=desc||'';
+      document.getElementById('modal-extra').innerHTML='';
+      const acts=document.getElementById('modal-actions');
+      acts.innerHTML=`<button class="btn btn-ghost" data-act="no">${esc(cancel)}</button>
+                      <button class="btn" data-act="yes">${esc(ok)}</button>`;
+      modal.hidden=false;
+      requestAnimationFrame(()=>modal.classList.add('on'));
+      document.addEventListener('keydown',onModalKey);
+      acts.querySelector('[data-act="yes"]').focus();
+      acts.onclick=e=>{
+        const act=e.target.dataset.act; if(!act) return;
+        closeModal(); resolve(act==='yes');
+      };
+      modal.onclick=e=>{ if(e.target===modal){ closeModal(); resolve(false); } };
+    });
+  }
+
+  /* 복사 실패 시 직접 선택해 가져가도록 텍스트를 보여준다 */
+  function showText(title,text){
+    lastFocus=document.activeElement;
+    document.getElementById('modal-title').textContent=title;
+    document.getElementById('modal-desc').textContent='아래 내용을 선택해 복사해 주세요.';
+    document.getElementById('modal-extra').innerHTML=`<textarea readonly>${esc(text)}</textarea>`;
+    const acts=document.getElementById('modal-actions');
+    acts.innerHTML='<button class="btn" data-act="close">닫기</button>';
+    modal.hidden=false;
+    requestAnimationFrame(()=>modal.classList.add('on'));
+    document.addEventListener('keydown',onModalKey);
+    const ta=document.querySelector('#modal-extra textarea');
+    ta.focus(); ta.select();
+    acts.onclick=closeModal;
+    modal.onclick=e=>{ if(e.target===modal) closeModal(); };
+  }
+
+  function toast(msg){
+    toastEl.textContent=msg;
+    toastEl.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>toastEl.classList.remove('on'),2400);
+  }
+
+  /* 스크롤 진입 시 순차 등장 */
+  let observer=null;
+  function observeReveals(scope){
+    if(reduceMotion){ scope.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')); return; }
+    if(observer) observer.disconnect();
+    observer=new IntersectionObserver((entries,obs)=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting) return;
+        const el=entry.target;
+        const delay=Number(el.dataset.delay||0);
+        setTimeout(()=>el.classList.add('in'),delay);
+        obs.unobserve(el);
+      });
+    },{rootMargin:'0px 0px -8% 0px',threshold:.08});
+    scope.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  }
+
+  /* 화면 전환 공통 */
+  function paint(html){
+    root.innerHTML=html;
+    root.classList.remove('screen-in');
+    void root.offsetWidth;
+    if(!reduceMotion) root.classList.add('screen-in');
+    observeReveals(root);
+  }
+
+  /* 숫자 카운트업 */
+  function countUp(el,to,ms){
+    if(reduceMotion){ el.textContent=to; return; }
+    const start=performance.now();
+    const step=now=>{
+      const t=Math.min(1,(now-start)/ms);
+      el.textContent=Math.round(to*(1-Math.pow(1-t,3)));
+      if(t<1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ============================================================
+     인트로
+     ============================================================ */
+  function renderIntro(){
+    demographics.consent=false;          // 돌아올 때마다 동의는 다시 선택
+    setTopbar(0);
+    const configured=statsConfigured();
+    const resumed=answers.some(x=>x!==null);
+
+    paint(`
+    <section class="hero reveal" data-delay="0">
+      <svg class="roof" viewBox="0 0 270 200" aria-hidden="true">
+        <path d="M18 108 L135 24 L252 108"/>
+        <path d="M44 100 L44 184 L226 184 L226 100"/>
+        <path d="M104 184 L104 132 L166 132 L166 184"/>
+        <path d="M70 124 L92 124 M70 124 L70 146 M92 124 L92 146 M70 146 L92 146"/>
+        <path d="M178 124 L200 124 M178 124 L178 146 M200 124 L200 146 M178 146 L200 146"/>
+        <path d="M135 24 L135 12 M128 18 L142 18" stroke-dasharray="3 3"/>
+      </svg>
+      <div class="eyebrow">THE HOME LIFE PROFILE</div>
+      <h1>나는 어떤 집에서<br>살아야 할까?</h1>
+      <p class="lead">집값과 평수가 아니라, 앞으로 집에서 보내고 싶은 하루를 기준으로<br class="pc-br"> 나에게 어울리는 주거환경을 살펴봅니다.</p>
+      <div class="hero-meta">
+        <span><b class="num">48</b>문항</span>
+        <span><b class="num">4</b>파트</span>
+        <span><b class="num">8</b>개 지표</span>
+        <span><b class="num">8~12</b>분</span>
+      </div>
+    </section>
+
+    <section class="sheet reveal" data-delay="90" style="margin-top:18px">
+      <div class="eyebrow">STEP 00 · 선택 정보</div>
+      <h2>내 또래는 어떤 집을 원할까?</h2>
+      <p class="small">기본 정보를 선택하면 결과 화면에서 같은 연령대·성별 참여자의 주거 유형 분포를 함께 볼 수 있어요. <strong>선택하지 않아도 검사에 참여할 수 있습니다.</strong></p>
+      <div class="field-grid">
+        <div class="field"><label for="age-band">연령대 (선택)</label><select id="age-band">${opt(AGE_OPTIONS)}</select></div>
+        <div class="field"><label for="gender-group">성별 (선택)</label><select id="gender-group">${opt(GENDER_OPTIONS)}</select></div>
+      </div>
+      <label class="consent">
+        <input id="aggregate-consent" type="checkbox" ${configured?'':'disabled'}>
+        <span><strong>익명 참여 통계 집계에 동의합니다 (선택)</strong><br>
+        검사가 끝나면 선택한 연령대·성별·1순위 주거 유형과 중복 집계를 줄이기 위한 무작위 코드만 저장됩니다. 48개 개별 응답과 이름·연락처는 전송하지 않습니다.</span>
+      </label>
+      <p class="micro" style="margin:10px 0 0">${configured
+        ?'통계 참여에 동의하지 않아도 결과는 그대로 확인할 수 있습니다.'
+        :'현재는 집계 서버가 연결되지 않은 시안입니다. 선택한 정보는 이 브라우저에만 저장되며 결과 화면에서 예시 그래프를 볼 수 있어요.'}</p>
+    </section>
+
+    <section class="sheet reveal" data-delay="150">
+      <div class="eyebrow">무엇을 살펴보나</div>
+      <ul class="parts">
+        ${DATA.parts.map(p=>`
+          <li>
+            <span class="no">${esc(p.number.replace('PART ',''))}</span>
+            <div><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p></div>
+          </li>`).join('')}
+      </ul>
+    </section>
+
+    <section class="sheet reveal" data-delay="210">
+      <h3>응답 안내</h3>
+      <p class="small" style="color:var(--ink-2)">지금 사는 집의 상태가 아니라 <strong>앞으로 바라는 생활방식</strong>을 기준으로 답해 주세요. 가능한지부터 따지기보다, 무엇을 중요하게 여기는지 확인하는 과정입니다. 정답은 없습니다.</p>
+      <div class="btn-row">
+        <button class="btn" id="start">${resumed?'이어서 시작하기':'테스트 시작하기'}</button>
+        ${resumed?'<button class="btn btn-ghost" id="clear">이전 응답 지우기</button>':''}
+      </div>
+      <div class="note">이 콘텐츠는 출판 마케팅용 기획물로, 신뢰도와 타당도가 검증된 심리검사가 아닙니다. 결과는 선호를 탐색하는 참고 자료이며 특정 주택의 구매나 이주를 권하지 않습니다.</div>
+    </section>`);
+
+    const ageEl=document.getElementById('age-band');
+    const genderEl=document.getElementById('gender-group');
+    const consentEl=document.getElementById('aggregate-consent');
+    ageEl.value=demographics.age; genderEl.value=demographics.gender;
+    ageEl.onchange=()=>{demographics.age=ageEl.value;saveDemographics()};
+    genderEl.onchange=()=>{demographics.gender=genderEl.value;saveDemographics()};
+    consentEl.onchange=()=>{demographics.consent=consentEl.checked};
+
+    document.getElementById('start').onclick=()=>{
+      const next=DATA.parts.findIndex((_,i)=>!completedPart(i));
+      renderPart(next<0?0:next); toTop();
+    };
+    const c=document.getElementById('clear');
+    if(c) c.onclick=async()=>{
+      const yes=await ask({
+        title:'이전 응답을 지울까요?',
+        desc:'이 브라우저에 저장된 48문항의 응답이 모두 사라지고 처음부터 다시 시작합니다.',
+        ok:'지우기'
+      });
+      if(yes){ answers=Array(total).fill(null); save(); renderIntro(); toast('이전 응답을 지웠어요.'); }
+    };
+  }
+
+  /* ============================================================
+     문항 화면
+     ============================================================ */
+  function renderPart(p){
+    part=p;
+    const meta=DATA.parts[p];
+    const items=DATA.questions.slice(p*PER_PART,p*PER_PART+PER_PART);
+    setTopbar(answered()/total);
+
+    paint(`
+    <section class="sheet">
+      <div class="part-head">
+        <div class="row">
+          <div>
+            <div class="eyebrow">${esc(meta.number)} / 04</div>
+            <h1>${esc(meta.title)}</h1>
+            <p class="small" style="margin:0">${esc(meta.description)}</p>
+          </div>
+          <button class="btn btn-ghost" id="to-home" style="padding:9px 14px;min-height:0;font-size:13px;flex:0 0 auto">처음으로</button>
+        </div>
+        <div class="gauge">
+          <div class="gauge-row">
+            <span>전체 진행 <b class="num" id="all-count">${answered()}/${total}</b></span>
+            <span>이 파트 <b class="num" id="part-count">${countPart(p)}/${PER_PART}</b></span>
+          </div>
+          <div class="ticks">
+            ${DATA.parts.map((_,i)=>`<i class="${completedPart(i)?'done':i===p?'active':''}"></i>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top:0">현재 집을 평가하는 것이 아닙니다. <strong>앞으로의 삶에서 중요하게 여기는 조건</strong>을 골라 주세요.</div>
+
+      <form id="qform" style="margin-top:4px">
+        ${items.map((q,loc)=>{
+          const gi=p*PER_PART+loc;
+          const cur=answers[gi];
+          return `
+          <fieldset class="q reveal ${cur!==null?'answered':''}" data-delay="${Math.min(loc*38,320)}" data-idx="${gi}">
+            <legend class="sr">${esc(q.text)}</legend>
+            <div class="q-text"><span class="q-no num">${String(loc+1).padStart(2,'0')}</span><span>${esc(q.text)}</span></div>
+            <div class="scale">
+              <div class="scale-track" aria-hidden="true"></div>
+              <div class="scale-opts">
+                ${SCALE.map(s=>`
+                  <label class="opt">
+                    <input type="radio" name="q-${gi}" value="${s.v}" ${cur===s.v?'checked':''} aria-label="${esc(s.full)}">
+                    <span class="dot" aria-hidden="true"></span>
+                    <span class="opt-label">${esc(s.short)}</span>
+                  </label>`).join('')}
+              </div>
+            </div>
+          </fieldset>`;
+        }).join('')}
+      </form>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="prev">${p===0?'소개 화면':'이전 파트'}</button>
+        <button class="btn" id="next" ${completedPart(p)?'':'disabled'}>${p===DATA.parts.length-1?'분석 결과 보기':'다음 파트'} →</button>
+      </div>
+      <p class="micro" style="margin:12px 0 0">${PER_PART}문항에 모두 답하면 다음 단계로 넘어갈 수 있습니다. 진행 상황은 이 브라우저에 자동 저장됩니다.</p>
+    </section>`);
+
+    root.querySelectorAll('input[type="radio"]').forEach(inp=>{
+      inp.addEventListener('change',e=>{
+        const idx=Number(e.target.name.slice(2));
+        answers[idx]=Number(e.target.value);
+        save();
+        e.target.closest('.q').classList.add('answered');
+        const done=answered();
+        document.getElementById('all-count').textContent=`${done}/${total}`;
+        document.getElementById('part-count').textContent=`${countPart(part)}/${PER_PART}`;
+        document.getElementById('next').disabled=!completedPart(part);
+        document.querySelectorAll('.ticks i')[part].classList.toggle('done',completedPart(part));
+        setTopbar(done/total);
+      });
+    });
+
+    document.getElementById('to-home').onclick=()=>{renderIntro();toTop()};
+    document.getElementById('prev').onclick=()=>{
+      if(part===0) renderIntro(); else renderPart(part-1);
+      toTop();
+    };
+    document.getElementById('next').onclick=()=>{
+      if(!completedPart(part)) return;
+      if(part===DATA.parts.length-1) renderResults(); else renderPart(part+1);
+      toTop();
+    };
+  }
+
+  /* ============================================================
+     채점
+     ============================================================ */
+  function scores(){
+    const acc={}; axesOrder.forEach(x=>acc[x]=[]);
+    DATA.questions.forEach((q,i)=>{
+      const raw=answers[i];
+      if(raw!==null) acc[q.axis].push(q.reverse?6-raw:raw);
+    });
+    return Object.fromEntries(axesOrder.map(x=>{
+      const arr=acc[x];
+      const avg=arr.reduce((a,b)=>a+b,0)/arr.length;
+      return [x,Math.round((avg-1)*25)];
+    }));
+  }
+  function profiles(s){
+    return DATA.profiles.map(p=>{
+      const distance=axesOrder.reduce((sum,x)=>sum+Math.abs(s[x]-p.target[x]),0)/axesOrder.length;
+      return {...p,distance};
+    }).sort((a,b)=>a.distance-b.distance);
+  }
+  function conflictNotes(s){
+    const a=[];
+    if(s.L>=70&&s.N>=70) a.push('도보 생활과 자연을 모두 중요하게 생각해요. 풍경 좋은 외곽보다 <strong>녹지가 가까운 실제 생활권</strong>을 먼저 확인하세요.');
+    if(s.N>=70&&s.M>=70) a.push('자연은 가깝게 누리고 싶지만 관리 부담은 줄이고 싶어 해요. 마당 있는 단독주택보다 <strong>공원 옆 공동관리 주거</strong>가 편할 수 있어요.');
+    if(s.F>=70&&s.C>=70) a.push('여러 지역에서 살아보고 싶지만 지속 비용도 중요해요. 두 집을 바로 마련하기보다 <strong>단기 체류와 계절별 한 달 살기</strong>로 검증해 보세요.');
+    if(s.P>=70&&s.R>=70) a.push('이웃과 연결되기를 바라면서도 혼자만의 영역을 중시해요. <strong>독립된 사적 공간과 선택적 공용 공간</strong>이 함께 있는 구조가 어울려요.');
+    if(s.H>=70&&s.C>=70) a.push('다양한 활동을 집에서 하고 싶지만 비용은 아끼려 해요. 무조건 큰 집보다 <strong>용도를 바꿀 수 있는 가변형 공간</strong>을 고려해 보세요.');
+    if(a.length===0) a.push('한 가지 주거 형태가 모든 조건을 해결하지는 않아요. 상위 유형에 공통으로 나타나는 조건부터 생활 속에서 확인해 보세요.');
+    return a;
+  }
+
+  /* ============================================================
+     결과 화면
+     ============================================================ */
+  function bookSection(){
+    const by=[BOOK.author,BOOK.publisher].filter(Boolean).join(' · ');
+    const links=BOOK.stores.filter(s=>s.url).map(s=>
+      `<a class="store" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.name)}</a>`).join('');
+    return `
+    <section class="sheet reveal" data-delay="60">
+      <div class="eyebrow">이 테스트의 바탕이 된 책</div>
+      <div class="book">
+        <div class="book-cover">
+          <img src="${esc(BOOK.cover)}" alt="《${esc(BOOK.title)}》 표지"
+               onerror="var p=this.parentNode;this.remove();p.insertAdjacentHTML('beforeend','<div class=\\'ph\\'>표지 이미지<br>준비 중</div>')">
+        </div>
+        <div>
+          <h3>《${esc(BOOK.title)}》</h3>
+          ${by?`<p class="byline">${esc(by)}</p>`:''}
+          <p class="small" style="color:var(--ink-2)">${esc(BOOK.blurb)}</p>
+          ${links?`<div class="stores">${links}</div>`:'<p class="micro" style="margin:12px 0 0">※ 서점 링크는 BOOK.stores 에 주소를 넣으면 자동으로 표시됩니다.</p>'}
+        </div>
+      </div>
+    </section>`;
+  }
+
+  function renderResults(){
+    if(answers.some(v=>v===null)){
+      renderPart(DATA.parts.findIndex((_,i)=>!completedPart(i)));
+      return;
+    }
+    const s=scores();
+    const ranked=profiles(s);
+    const topDims=axesOrder.slice().sort((a,b)=>s[b]-s[a]);
+    const close=ranked[1].distance-ranked[0].distance<4;
+    const flat=Math.max(...Object.values(s))-Math.min(...Object.values(s))<20;
+    setTopbar(1);
+
+    const headline=flat
+      ? '전체 선호의 차이가 크지 않습니다. 아래 유형은 특히 참고용으로만 살펴보세요.'
+      : close
+        ? '두 가지 이상의 주거 형태에 비슷한 선호가 나타났어요.'
+        : '가장 가까운 유형과 함께 다른 선택지도 확인해 보세요.';
+
+    paint(`
+    <section class="hero reveal">
+      <svg class="roof" viewBox="0 0 270 200" aria-hidden="true">
+        <path d="M18 108 L135 24 L252 108"/>
+        <path d="M44 100 L44 184 L226 184 L226 100"/>
+        <path d="M104 184 L104 132 L166 132 L166 184"/>
+      </svg>
+      <div class="eyebrow">YOUR HOME LIFE PROFILE</div>
+      <h1>내가 바라는<br>집의 모습</h1>
+      <p class="lead">48개의 답변에서 드러난 여덟 가지 생활 선호로 가까운 주거환경을 살펴봤어요.</p>
+      <p class="small" style="margin:14px 0 0">${headline}</p>
+    </section>
+
+    <section class="sheet reveal" data-delay="60" style="margin-top:18px">
+      <div class="eyebrow">01 · 주거 선호 프로필</div>
+      <h2>나의 8개 선호 지표</h2>
+      <p class="small">각 축은 0~100점으로 표시합니다. 높고 낮음은 우열이 아니라 선호의 강도를 뜻하며, <strong>인구집단 내 백분위가 아닙니다.</strong></p>
+      <div class="bars" style="margin-top:18px">
+        ${axesOrder.map(x=>`
+          <div class="bar-item">
+            <div class="bar-head">
+              <strong title="${esc(DATA.axes[x].description)}">${esc(DATA.axes[x].name)}</strong>
+              <span><i class="num" data-count="${s[x]}">0</i>점</span>
+            </div>
+            <div class="bar"><i data-w="${s[x]}"></i></div>
+          </div>`).join('')}
+      </div>
+      <hr class="rule">
+      <h3>내가 특히 중요하게 여기는 조건</h3>
+      <p style="margin-bottom:6px">${topDims.slice(0,3).map(x=>`<strong>${esc(DATA.axes[x].name)}</strong>`).join('　·　')}</p>
+      <p class="small">${topDims.slice(0,3).map(x=>esc(DATA.axes[x].description)).join(' / ')}</p>
+    </section>
+
+    <section class="sheet reveal" data-delay="60">
+      <div class="eyebrow">02 · 가까운 주거 유형</div>
+      <h2>나와 가까운 주거환경 TOP 3</h2>
+      <p class="small">8개 선호 점수를 유형별 기준값과 비교해 순위를 매겼습니다. 탐색을 위한 참고이며 통계적으로 검증된 적합도는 아닙니다.</p>
+      ${ranked.slice(0,3).map((x,i)=>`
+        <div class="result ${i===0?'top':''}">
+          <span class="rank">${i+1}순위 · ${i===0?'가장 가까운 유형':'함께 고려할 유형'}</span>
+          <h3>${esc(x.name)}</h3>
+          <p style="margin-bottom:8px">${esc(x.headline)}</p>
+          <p class="small" style="color:var(--ink-2)">${esc(x.adv)}</p>
+          <div class="tags">${x.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+          <div class="check"><strong>현실적으로 확인할 점</strong>${esc(x.check)}</div>
+        </div>`).join('')}
+    </section>
+
+    <section class="sheet reveal" data-delay="60">
+      <div class="eyebrow">03 · 선택의 균형</div>
+      <h2>선호가 부딪히는 지점</h2>
+      <p class="small">조건이 충돌할 때는 하나를 포기하기보다 균형점을 찾아보세요.</p>
+      ${conflictNotes(s).map(x=>`<div class="balance">${x}</div>`).join('')}
+      <hr class="rule">
+      <h3>실제 집을 정하기 전에</h3>
+      <p class="small" style="color:var(--ink-2)">이 테스트는 지금의 경제적 상황·동거인·이동 가능성·건물의 구조적 조건을 평가하지 않습니다. 마음에 드는 결과가 나왔더라도 해당 환경에서 평일과 주말을 직접 보내보고 생활비와 동선을 확인해 보세요.</p>
+      <div class="btn-row">
+        <button class="btn" id="copy-results">결과 요약 복사</button>
+        <button class="btn btn-ghost" id="restart">다시 검사하기</button>
+      </div>
+    </section>
+
+    ${bookSection()}
+
+    <section id="stats-section" class="sheet reveal" data-delay="60">
+      <div class="eyebrow">04 · Participant insights</div>
+      <h2>다른 참여자들은 어떤 집을 원할까?</h2>
+      <p class="small">전체 참여자와 같은 연령대·성별 참여자의 선호 유형을 비교할 수 있어요. 공개 집계는 그룹별 최소 20명부터 표시합니다.</p>
+      <div id="stats-content"><p class="small">집계 상태를 확인하고 있어요.</p></div>
+    </section>
+
+    <p class="foot">기획 근거: 《오십, 살 집을 생각하다》의 생활권·관계·공간 재구성·이주 논의. 책의 내용을 바탕으로 새롭게 작성한 독자 참여형 기획물입니다. 검증된 심리검사가 아니며, 48개 개별 문항 응답은 이 브라우저에만 저장됩니다. 별도 동의 시에만 집계용 1순위 유형과 선택한 기본 정보가 전송됩니다.</p>`);
+
+    /* 바 채우기 + 숫자 카운트업 */
+    const runBars=()=>{
+      root.querySelectorAll('.bar > i').forEach((el,i)=>{
+        setTimeout(()=>{el.style.width=el.dataset.w+'%'},reduceMotion?0:90+i*55);
+      });
+      root.querySelectorAll('[data-count]').forEach((el,i)=>{
+        setTimeout(()=>countUp(el,Number(el.dataset.count),820),reduceMotion?0:90+i*55);
+      });
+    };
+    setTimeout(runBars,reduceMotion?0:260);
+
+    document.getElementById('copy-results').onclick=async()=>{
+      const summary=[
+        '[나의 주거 라이프스타일 테스트]',
+        ...topDims.slice(0,3).map(x=>`중요하게 생각한 조건: ${DATA.axes[x].name} ${s[x]}점`),
+        ...ranked.slice(0,3).map((x,i)=>`${i+1}순위: ${x.name}`),
+        '※ 출판 기획물의 선호 탐색 결과이며 전문 진단이 아닙니다.'
+      ].join('\n');
+      try{ await navigator.clipboard.writeText(summary); toast('결과 요약을 복사했어요.'); }
+      catch(e){ showText('결과 요약',summary); }
+    };
+    document.getElementById('restart').onclick=async()=>{
+      const yes=await ask({
+        title:'다시 검사할까요?',
+        desc:'새로 시작하면 지금까지의 응답이 지워지고 첫 문항부터 다시 진행합니다.',
+        ok:'다시 하기'
+      });
+      if(yes){ answers=Array(total).fill(null); save(); renderIntro(); toTop(); }
+    };
+
+    initStatistics(ranked[0].id);
+  }
+
+  /* ============================================================
+     통계 (Supabase 선택 연동)
+     ============================================================ */
+  function demoStats(){
+    const ids=DATA.profiles.map(p=>p.id);
+    const ageNames=AGE_OPTIONS.slice(1), genderNames=['여성','남성','기타'];
+    let rows=[],seq=0;
+    for(let age=0;age<ageNames.length;age++) for(let gender=0;gender<genderNames.length;gender++){
+      const n=gender===2?6:34;
+      for(let i=0;i<n;i++){
+        let idx=(i*3+age*2+gender+(i%7===0?4:0))%ids.length;
+        if(i%4===0) idx=(age+gender)%ids.length;
+        rows.push({age:ageNames[age],gender:genderNames[gender],type:ids[idx],seq:seq++});
+      }
+    }
+    const group=(arr,scope,key)=>({scope,key,n:arr.length,
+      counts:Object.fromEntries(ids.map(id=>[id,arr.filter(r=>r.type===id).length]))});
+    const groups=[group(rows,'overall','전체')];
+    ageNames.forEach(x=>{const a=rows.filter(y=>y.age===x);if(a.length>=20)groups.push(group(a,'age',x))});
+    genderNames.forEach(x=>{const a=rows.filter(y=>y.gender===x);if(a.length>=20)groups.push(group(a,'gender',x))});
+    return {total:rows.length,minimum_n:20,groups};
+  }
+  /* 연령대·성별을 Firestore 필드명으로 쓰기 위한 영문 키.
+     한글/공백이 섞인 필드명은 경로 처리가 까다로워 코드로 변환한다. */
+  const AGE_KEY={'20대 이하':'u20','30대':'s30','40대':'s40','50대':'s50','60대':'s60','70대 이상':'o70'};
+  const GENDER_KEY={'여성':'f','남성':'m','기타':'x'};
+
+  /* Firebase SDK는 실제로 필요한 순간에만 불러온다.
+     불러오기에 실패해도 테스트 본체는 그대로 동작해야 하므로 예외를 삼킨다. */
+  let fbCache=null;
+  async function firebase(){
+    if(fbCache!==null) return fbCache;
+    try{
+      const [appMod,fsMod]=await Promise.all([
+        import('https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js')
+      ]);
+      const app=appMod.initializeApp(FIREBASE_CONFIG);
+      fbCache={
+        db:fsMod.getFirestore(app),
+        doc:fsMod.doc, getDoc:fsMod.getDoc, setDoc:fsMod.setDoc, increment:fsMod.increment
+      };
+    }catch(_e){ fbCache=false; }
+    return fbCache;
+  }
+
+  /* Firestore 문서(누적 카운터)를 화면이 기대하는 형태로 변환 */
+  function toStats(raw){
+    const ids=DATA.profiles.map(p=>p.id);
+    const norm=obj=>Object.fromEntries(ids.map(id=>[id,Math.max(0,Number(obj?.[id]||0))]));
+    const sum=c=>Object.values(c).reduce((a,b)=>a+b,0);
+    const groups=[];
+
+    const overall=norm(raw.overall);
+    const totalN=sum(overall);
+    if(totalN>=MINIMUM_N) groups.push({scope:'overall',key:'전체',n:totalN,counts:overall});
+
+    AGE_OPTIONS.slice(1).forEach(label=>{
+      const c=norm(raw['age_'+AGE_KEY[label]]), n=sum(c);
+      if(n>=MINIMUM_N) groups.push({scope:'age',key:label,n,counts:c});
+    });
+    GENDER_OPTIONS.slice(1).forEach(label=>{
+      const c=norm(raw['gender_'+GENDER_KEY[label]]), n=sum(c);
+      if(n>=MINIMUM_N) groups.push({scope:'gender',key:label,n,counts:c});
+    });
+    return {total:totalN,minimum_n:MINIMUM_N,groups};
+  }
+
+  /* 1순위 유형 1건을 누적 카운터에 더한다.
+     개별 응답은 저장하지 않고 숫자만 올리므로 되돌아볼 기록이 남지 않는다. */
+  async function postFirstChoice(typeId){
+    if(!demographics.consent||!statsConfigured()) return '미참여';
+    try{
+      if(localStorage.getItem(submittedFlagKey)==='yes') return '이 브라우저에서 이미 집계에 참여했어요.';
+    }catch(_e){}
+
+    const fb=await firebase();
+    if(!fb) throw new Error('통계 서버에 연결하지 못했어요.');
+
+    const bump={overall:{[typeId]:fb.increment(1)}};
+    const ak=AGE_KEY[demographics.age];
+    if(ak) bump['age_'+ak]={[typeId]:fb.increment(1)};
+    const gk=GENDER_KEY[demographics.gender];
+    if(gk) bump['gender_'+gk]={[typeId]:fb.increment(1)};
+
+    await fb.setDoc(fb.doc(fb.db,...STATS_DOC),bump,{merge:true});
+    try{ localStorage.setItem(submittedFlagKey,'yes'); }catch(_e){}
+    return '집계에 참여했어요. 감사합니다!';
+  }
+
+  async function getStats(){
+    const fb=await firebase();
+    if(!fb) throw new Error('통계 서버에 연결하지 못했어요.');
+    const snap=await fb.getDoc(fb.doc(fb.db,...STATS_DOC));
+    return toStats(snap.exists()?snap.data():{});
+  }
+  const cohortRows=(arr,scope)=>arr.filter(x=>x.scope===scope).sort((a,b)=>
+    scope==='age'?AGE_OPTIONS.indexOf(a.key)-AGE_OPTIONS.indexOf(b.key)
+                 :GENDER_OPTIONS.indexOf(a.key)-GENDER_OPTIONS.indexOf(b.key));
+  const winner=g=>{const t=Object.entries(g.counts||{}).sort((a,b)=>b[1]-a[1]);return t.length?t[0]:['',0]};
+
+  function distributionBars(g,myType){
+    const head=`<div class="mini"><strong>${esc(g.key)} 참여자 ${g.n.toLocaleString('ko-KR')}명</strong>의 대표 주거 유형 분포입니다.${
+      myType&&g.counts&&g.counts[myType]!==undefined
+        ? ` 내 1순위 유형을 선택한 참여자는 이 그룹의 ${Math.round(g.counts[myType]/g.n*100)}%입니다.` : ''}</div>`;
+    const rows=DATA.profiles.map(p=>{
+      const n=Math.max(0,Number(g.counts?.[p.id]||0));
+      const pct=g.n?Math.round(n/g.n*100):0;
+      return `<div class="dist ${p.id===myType?'me':''}">
+        <div class="dist-name">${esc(p.name)}${p.id===myType?' <strong>· 나의 유형</strong>':''}</div>
+        <div class="dist-track" role="img" aria-label="${esc(p.name)} ${pct}%"><i data-w="${pct}"></i></div>
+        <div class="dist-val num">${pct}% · ${n}명</div>
+      </div>`;
+    }).join('');
+    return head+rows;
+  }
+  function animateDist(scope){
+    scope.querySelectorAll('.dist-track > i').forEach((el,i)=>{
+      setTimeout(()=>{el.style.width=el.dataset.w+'%'},reduceMotion?0:40+i*40);
+    });
+  }
+  function groupList(groups,scope){
+    const rows=cohortRows(groups,scope);
+    const names=scope==='age'?AGE_OPTIONS.slice(1):GENDER_OPTIONS.slice(1);
+    return `<div class="cohort"><h3>${scope==='age'?'연령대별 가장 많은 유형':'성별 가장 많은 유형'}</h3>`+
+      names.map(name=>{
+        const g=rows.find(x=>x.key===name);
+        if(!g) return `<div class="cohort-item"><strong>${esc(name)}</strong><span>표본 20명 미만 또는 응답 없음 · 비공개</span></div>`;
+        const [id,count]=winner(g);
+        return `<div class="cohort-item"><strong>${esc(name)} <span class="num">(n=${g.n})</span></strong><span>${esc(profileName(id))} · ${Math.round(count/g.n*100)}%</span></div>`;
+      }).join('')+'</div>';
+  }
+  function displayStats(stats,myType,demo=false){
+    const box=document.getElementById('stats-content'); if(!box) return;
+    const groups=Array.isArray(stats.groups)?stats.groups:[];
+    const overall=groups.find(x=>x.scope==='overall');
+    if(!overall){
+      box.innerHTML=`<div class="mini">아직 공개 가능한 참여자 수가 모이지 않았어요. 실제 통계는 전체 20명 이상부터 표시됩니다. 현재 집계 ${Number(stats.total||0)}명.</div>${
+        !demo?'<button id="show-demo" class="btn btn-ghost">가상 데이터로 그래프 미리보기</button>':''}`;
+      const b=document.getElementById('show-demo');
+      if(b) b.onclick=()=>displayStats(demoStats(),myType,true);
+      return;
+    }
+    const tabs=[{label:'전체 참여자',grp:overall}];
+    if(demographics.age!=='응답하지 않음')
+      tabs.push({label:`나와 같은 ${demographics.age}`,grp:groups.find(x=>x.scope==='age'&&x.key===demographics.age)});
+    if(demographics.gender!=='응답하지 않음')
+      tabs.push({label:`나와 같은 성별 (${demographics.gender})`,grp:groups.find(x=>x.scope==='gender'&&x.key===demographics.gender)});
+
+    box.innerHTML=`${demo?'<p style="margin-bottom:12px"><span class="demo-flag">가상 데이터 · 실제 참여자 아님</span></p>':''}
+      <div class="tabs" role="group" aria-label="비교할 집단 선택">
+        ${tabs.map((t,i)=>`<button type="button" data-tab="${i}" class="tab ${i===0?'active':''}">${esc(t.label)}</button>`).join('')}
+      </div>
+      <div id="dist-box"></div>
+      <div class="cohorts">${groupList(groups,'age')}${groupList(groups,'gender')}</div>
+      <p class="micro" style="margin-top:16px">표시된 백분율은 해당 집단에서 각 유형이 1순위로 나온 비율입니다. 전체 인구를 대표하지 않으며, 표본 20명 미만 그룹은 공개하지 않습니다. 연령·성별에 따라 개인의 점수가 달라지지는 않습니다.</p>`;
+
+    const draw=idx=>{
+      const t=tabs[idx], el=document.getElementById('dist-box');
+      if(!t.grp){ el.innerHTML='<div class="mini">해당 집단의 응답이 아직 20명 미만이어서 공개하지 않아요.</div>'; }
+      else { el.innerHTML=distributionBars(t.grp,myType); animateDist(el); }
+      box.querySelectorAll('[data-tab]').forEach((b,i)=>{
+        b.classList.toggle('active',i===idx);
+        b.setAttribute('aria-pressed',String(i===idx));
+      });
+    };
+    box.querySelectorAll('[data-tab]').forEach(btn=>btn.onclick=()=>draw(Number(btn.dataset.tab)));
+    draw(0);
+  }
+  async function initStatistics(myType){
+    const box=document.getElementById('stats-content'); if(!box) return;
+    if(!statsConfigured()){
+      box.innerHTML='<div class="mini"><strong>현재는 화면 시안입니다.</strong><br>실제 참여자 집계 서버가 연결되지 않았습니다. 아래 버튼으로 그래프 형태를 확인할 수 있어요. 예시 데이터는 실제 응답이 아닙니다.</div><button id="show-demo" class="btn btn-ghost">가상 데이터로 그래프 미리보기</button>';
+      document.getElementById('show-demo').onclick=()=>displayStats(demoStats(),myType,true);
+      return;
+    }
+    try{
+      const report=await postFirstChoice(myType);
+      if(!document.getElementById('stats-content')) return;
+      box.innerHTML=`<p class="small">${esc(report)} 참여자 통계를 불러오는 중입니다.</p>`;
+      const stats=await getStats();
+      if(!document.getElementById('stats-content')) return;
+      displayStats(stats,myType,false);
+    }catch(err){
+      if(!document.getElementById('stats-content')) return;
+      box.innerHTML=`<div class="mini">집계 서버 연결을 확인해 주세요. ${esc(err.message||'알 수 없는 오류')}</div><button id="show-demo" class="btn btn-ghost">가상 데이터로 그래프 미리보기</button>`;
+      document.getElementById('show-demo').onclick=()=>displayStats(demoStats(),myType,true);
+    }
+  }
+
+  renderIntro();
+  </script>
+</body>
+</html>
