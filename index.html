@@ -472,11 +472,11 @@
       background:var(--card);
       border:1px solid var(--line);border-top:3px solid var(--accent);
       border-radius:var(--r);
-      padding:18px 16px 16px;
+      padding:20px 16px 16px;
       box-shadow:0 14px 40px rgba(75,60,40,.11);
     }
     .promo.on{transform:translateY(-50%)}
-    .promo-close{top:7px;right:7px;width:26px;height:26px;font-size:15px}
+    .promo-close{display:none}   /* 여백에 뜨므로 닫기 없이 둔다 */
     .promo-label{
       font-size:10.5px;font-weight:800;letter-spacing:.13em;
       color:var(--accent);margin-bottom:12px;
@@ -1438,12 +1438,16 @@
   ];
   const PROMO_DELAY=4200;      // 문항 화면 진입 후 등장까지
   const PROMO_ROTATE=7000;     // 카피 교체 간격
-  const promoKey='home-quiz-promo-muted-until';
+  const promoKey='home-quiz-promo-muted-v2';
+  /* 우측 여백에 뜨는 넓은 화면에서는 닫기 없이 계속 노출한다.
+     하단 바로 바뀌는 좁은 화면에서만 닫을 수 있다. */
+  const promoCanDismiss=()=>!window.matchMedia('(min-width:1300px)').matches;
 
   const promoEl=document.getElementById('promo');
   let promoTimer=null, promoRotateTimer=null, promoIdx=0, promoReady=false;
 
   function promoMuted(){
+    if(!promoCanDismiss()) return false;   // 넓은 화면은 숨김 기록을 따르지 않음
     try{
       const until=Number(localStorage.getItem(promoKey)||0);
       return until > Date.now();
